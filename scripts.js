@@ -6,4 +6,10 @@ var markup1 = $.getJSON('https://allorigins.me/get?url=' + encodeURIComponent('h
     return data.contents;
 });
 
-//
+//capture paper title, award name, author names and conference names from web page markup inside JSON-encoded data
+
+//push appropriate table cells with paper title, award name, author names and conference names 
+
+//write function to add above text content to formatted HTML markup
+
+//repeat for ten table rows of papers
