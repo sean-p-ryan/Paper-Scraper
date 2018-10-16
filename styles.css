@@ -1,0 +1,17 @@
+table {
+	margin: 30px auto;
+	width: 90%;
+	border-collapse: collapse;
+}
+
+td, th {
+	border: 1px solid black;
+	width: 20%;
+} 
+
+input {
+	width: 95%;
+	height: 100%;
+	border: none;
+	box-shadow: none;
+}
