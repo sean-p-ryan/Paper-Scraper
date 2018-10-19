@@ -1,6 +1,45 @@
 // //saves full source code of page to variable
 // var url1 = $(".url1").val();
 
+
+//loads JSON-encoded data from the server using a GET HTTP request. Saves as variable.
+var markup1;
+var myUrl = 'https://dl.acm.org/citation.cfm?id=3240360';
+
+var urls = [
+    'http://dl.acm.org/citation.cfm?id=3240357',
+    'http://dl.acm.org/citation.cfm?id=3240375',
+    'http://dl.acm.org/citation.cfm?id=3240381',
+    'http://dl.acm.org/citation.cfm?id=3241852',
+    'http://dl.acm.org/citation.cfm?id=3241865',
+]
+
+function getData(myUrl, callback) {
+    return $.getJSON(
+        'https://allorigins.me/get?url=' + encodeURIComponent(myUrl) + '&callback=?',
+        callback,
+    );
+}
+
+const test = (url) => {
+    return new Promise((resolve, reject) => {
+        getData(url, data => resolve(data));
+    });
+}
+
+function regexFunction(resolvedData) {
+    var arr = resolvedData.contents.match(/(<title>(.*)<\/title>)|"Conference Website"(.*)>(.*)<\/a>|"Author Profile Page"(.*)>(.*)<\/a>|award.*alt="(.*)"\s/gm);
+
+    return arr;
+}
+
+
+let promises = urls.map(test);
+let results = Promise.all(promises).then(data => data.map(regexFunction));
+console.log(results);
+
+
+
 // //loads JSON-encoded data from the server using a GET HTTP request. Saves as variable.
 // var markup1;
 
@@ -29,14 +68,14 @@
 
 
 
-var arr = [
-  "<title>Causal embeddings for recommendation</title>",
-  "\"Author Profile Page\" target=\"_self\">Stephen Bonner</a>",
-  "\"Author Profile Page\" target=\"_self\">Flavian Vasile</a>",
-  "\"Conference Website\" target=\"_blank\"><img style=\"margin-top:5px; border-width:1px; border-color:black\" src=\"https://portalparts.acm.org/3250000/3240323/thumb/cover_thumb.jpg\" height=\"102\" width=\"79\" alt=\"Cover Image\" /></a>",
-  "\"Conference Website\" target=\"_self\" class=\"link-text\">RecSys '18</a>",
-  "award.jpg\" alt=\"Best Paper\" "
-]
+	// var arr = [
+	//   "<title>Causal embeddings for recommendation</title>",
+	//   "\"Author Profile Page\" target=\"_self\">Stephen Bonner</a>",
+	//   "\"Author Profile Page\" target=\"_self\">Flavian Vasile</a>",
+	//   "\"Conference Website\" target=\"_blank\"><img style=\"margin-top:5px; border-width:1px; border-color:black\" src=\"https://portalparts.acm.org/3250000/3240323/thumb/cover_thumb.jpg\" height=\"102\" width=\"79\" alt=\"Cover Image\" /></a>",
+	//   "\"Conference Website\" target=\"_self\" class=\"link-text\">RecSys '18</a>",
+	//   "award.jpg\" alt=\"Best Paper\" "
+	// ]
 
 
 //gets title from arr[0]
@@ -51,23 +90,24 @@ var arr = [
 //get individual author name
 // arr[1].replace("\"Author Profile Page\" target=\"_self\">", "").replace("</a>", "");
 
-function cleanStrings(arr){
-	var title = arr[0].replace("<title>", "").replace("</title>", "");
-	var award = arr[arr.length -1].replace("award.jpg\" alt=\"", "").replace("\" ", "");
-	var conference = arr[arr.length - 2].replace("\"Author Profile Page\" target=\"_self\">", "").replace("</a>", "");
-	var authorsNumber = arr.length - 4;
-	var authors = [];
+// function cleanStrings(arr){
+// 	var title = arr[0].replace("<title>", "").replace("</title>", "");
+// 	var award = arr[arr.length -1].replace("award.jpg\" alt=\"", "").replace("\" ", "");
+// 	var conference = arr[arr.length - 2].replace("\"Author Profile Page\" target=\"_self\">", "").replace("</a>", "");
+// 	var authorsNumber = arr.length - 4;
+// 	var authors = [];
 
-	for (i = 1; i = authorsNumber - 1; i++){
-		arr[i].replace("\"Author Profile Page\" target=\"_self\">", "").replace("</a>", "");
-		authors.push(arr[i]);
-	}
+// 	for (i = 1; i = authorsNumber - 1; i++){
+// 		arr[i].replace("\"Author Profile Page\" target=\"_self\">", "").replace("</a>", "");
+// 		authors.push(arr[i]);
+// 	}
 
-	consolelog(title);
+// 	consolelog(title);
 
-}
+// }
 
-cleanStrings(arr);
+// cleanStrings(arr);
+
 
 
 
