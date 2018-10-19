@@ -2,16 +2,29 @@
 var url1 = $(".url1").val();
 
 //loads JSON-encoded data from the server using a GET HTTP request. Saves as variable.
-var markup1 = $.getJSON('https://allorigins.me/get?url=' + encodeURIComponent('https://dl.acm.org/citation.cfm?id=3240360') + '&callback=?', function(data){
-    return data;
-});
+var markup1;
 
-var arr = markup1.responseJSON.contents.match(/(<title>(.*)<\/title>)|"Conference Website"(.*)>(.*)<\/a>|"Author Profile Page"(.*)>(.*)<\/a>|award.*alt="(.*)"\s/gm);
+function test(variableToStore, callback) {
+   $.getJSON(
+       'https://allorigins.me/get?url=' + encodeURIComponent('https://dl.acm.org/citation.cfm?id=3240360') + '&callback=?',
+       function(data){
+           console.log('I\'m in a callback');
+           variableToStore = data;
+           console.log('Here\'s the data:', variableToStore);
+           callback(variableToStore);
+       }
+   );
+}
 
-//capture paper title, award name, author names and conference names from web page markup inside JSON-encoded data
+function myCallback(workingVariable) {
+   console.log('I\'m in another callback');
+   var arr = workingVariable.contents.match(/(<title>(.*)<\/title>)|"Conference Website"(.*)>(.*)<\/a>|"Author Profile Page"(.*)>(.*)<\/a>|award.*alt="(.*)"\s/gm);
 
-//push appropriate table cells with paper title, award name, author names and conference names 
+   console.log('Here\'s the arr');
+   console.log(arr);
+   console.log('FIN');
+}
 
-//write function to add above text content to formatted HTML markup
+test(markup1, myCallback);
 
-//repeat for ten table rows of papers
+
