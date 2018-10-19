@@ -13,73 +13,29 @@ var urls = [
     'http://dl.acm.org/citation.cfm?id=3241865',
 ]
 
-function test(myUrl, callback) {
-    $.getJSON(
+function getData(myUrl, callback) {
+    return $.getJSON(
         'https://allorigins.me/get?url=' + encodeURIComponent(myUrl) + '&callback=?',
-        function(data){
-            // console.log('I\'m in a callback');
-            // variableToStore = data;
-            // console.log('Here\'s the data:', variableToStore);
-            // callback(variableToStore);
-            console.log(data);
-            callback(data);
-        }
+        callback,
     );
 }
 
-function myCallback(workingVariable) {
-    // console.log('I\'m in another callback');
-    var arr = workingVariable.contents.match(/(<title>(.*)<\/title>)|"Conference Website"(.*)>(.*)<\/a>|"Author Profile Page"(.*)>(.*)<\/a>|award.*alt="(.*)"\s/gm);
-
-    console.log('arr:');
-    console.log(arr);
-    // console.log('FIN');
-    // return arr;
-    return arr;
-}
-
-function getResult(urls) {
-    return urls.map(function(url) {
-        return test(url, myCallback);
+const test = (url) => {
+    return new Promise((resolve, reject) => {
+        getData(url, data => resolve(data));
     });
 }
 
-let urlResults = getResult(urls);
+function regexFunction(resolvedData) {
+    var arr = resolvedData.contents.match(/(<title>(.*)<\/title>)|"Conference Website"(.*)>(.*)<\/a>|"Author Profile Page"(.*)>(.*)<\/a>|award.*alt="(.*)"\s/gm);
 
-// async function anotherAsyncWrapper(urls) {
-//     let result = await getResult(urls)
-//     console.log(result);
-//     return result;
-// }
-
-// anotherAsyncWrapper(urls);
+    return arr;
+}
 
 
-
-// async function mapUrls(urls) {
-//     let result = await urls.map(async function(url) {
-//         let singleResult = await test(url, myCallback);
-//         return singleResult;
-//     });
-
-//     console.log(result);
-//     return result;
-// }
-
-// async function getResult(urls) {
-//     let result = await mapUrls(urls);
-//     console.log(result);
-// }
-
-// getResult(urls);
-
-// var result = urls.map(url => {
-//     return test(url, myCallback);
-// });
-
-
-// test(markup1, myCallback);
-
+let promises = urls.map(test);
+let results = Promise.all(promises).then(data => data.map(regexFunction));
+console.log(results);
 
 
 
