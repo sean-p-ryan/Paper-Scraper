@@ -13,7 +13,7 @@ var urls = [
 	'http://dl.acm.org/citation.cfm?id=3241865',
 ]
 
-//pull data from paper web page on Digital Library
+// pull data from paper web page on Digital Library
 function getData(myUrl, callback) {
 	return $.getJSON(
 		'https://allorigins.me/get?url=' + encodeURIComponent(myUrl) + '&callback=?',
@@ -21,14 +21,14 @@ function getData(myUrl, callback) {
 	);
 }
 
-const test = (url) => {
+const getPromisedData = (url) => {
 	return new Promise((resolve, reject) => {
 		getData(url, data => resolve(data));
 	});
 }
 
-//pulls only needed strings out of webpage markup with Regex
-function regexFunction(resolvedData) {
+// pulls only needed strings out of webpage markup with Regex
+function applyRegex (resolvedData) {
 	// console.log("RESOLVED DATA");
 	// console.log(resolvedData.contents);
 	// return resolvedData.contents.match(/(<title>(.*)<\/title>)|"Conference Website"(.*)>(.*)<\/a>|"Author Profile Page"(.*)>(.*)<\/a>|award.*alt="(.*)"\s/gm);
@@ -95,11 +95,14 @@ function regexFunction(resolvedData) {
 }
 
 let cleaned = [];
-let promises = urls.map(test);
+
+let rawData = [];
+let promises = urls.map(getPromisedData);
 let results =
 	Promise.all(promises)
 		.then(data => {
-			return data.map(regexFunction)
+			rawData.push(data);
+			return data.map(applyRegex)
 		})
 		.then(regexes => {
 			return regexes.map(regex => {
